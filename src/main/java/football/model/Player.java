@@ -73,7 +73,7 @@ public abstract class Player {
         this.shirtNumber = shirtNumber;
     }
 
-    public void setPosition(Position position) {
+    protected void updatePosition(Position position) {
         validatePosition(position);
         this.position = position;
     }
