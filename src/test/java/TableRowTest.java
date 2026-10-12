@@ -93,4 +93,6 @@ public class TableRowTest {
         row.addResult(2, 1, 3);
         assertEquals("Arsenal P:1 W:1 D:0 L:0 GF:2 GA:1 GD:1 Pts:3", row.toString());
     }
+
+
 }

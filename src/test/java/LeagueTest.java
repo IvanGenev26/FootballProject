@@ -1,6 +1,4 @@
-import football.model.League;
-import football.model.Match;
-import football.model.Team;
+import football.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -66,5 +64,41 @@ public class LeagueTest {
         List<Match> matches = league.getMatches();
         matches.add(new Match(arsenal, chelsea));
         assertEquals(0,  league.getMatches().size());
+    }
+
+    @Test
+    void tableCountsAPlayedMatch() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        league.addMatch(match);
+        match.recordResult(2, 1);
+
+        List<TableRow> table = league.table(new ThreePointRule());
+
+        assertEquals(3, rowOf(table, arsenal).getPoints());
+        assertEquals(0, rowOf(table, chelsea).getPoints());
+    }
+
+    private TableRow rowOf(List<TableRow> table, Team team) {
+        for (TableRow row : table) {
+            if (row.getTeam().equals(team)) {
+                return row;
+            }
+        }
+        throw new IllegalStateException("No row for " + team.getName());
+    }
+
+    @Test
+    void tableLeaderIsFirst() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        league.addMatch(match);
+        match.recordResult(2, 1);
+
+        List<TableRow> table = league.table(new ThreePointRule());
+
+        assertEquals(arsenal, table.get(0).getTeam());
     }
 }

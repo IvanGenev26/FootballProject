@@ -48,4 +48,27 @@ public class League {
     public String getName() {
         return name;
     }
+
+    public List<TableRow> table(PointsRule rule) {
+        Map<Integer, TableRow> rows = new HashMap<>();
+        for (Team team : teams.values()) {
+            rows.put(team.getId(), new TableRow(team));
+        }
+        for (Match match : matches) {
+            if (match.isPlayed()) {
+                int homeGoals = match.getHomeGoals();
+                int awayGoals = match.getAwayGoals();
+
+                TableRow homeRow = rows.get(match.getHomeTeam().getId());
+                TableRow awayRow = rows.get(match.getAwayTeam().getId());
+
+                homeRow.addResult(homeGoals, awayGoals, rule.pointsFor(homeGoals, awayGoals));
+                awayRow.addResult(awayGoals, homeGoals, rule.pointsFor(awayGoals, homeGoals));
+            }
+        }
+        List<TableRow> result = new ArrayList<>(rows.values());
+        result.sort((a, b) -> Integer.compare(b.getPoints(), a.getPoints()));
+        return result;
+    }
+
 }
