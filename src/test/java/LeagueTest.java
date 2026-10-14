@@ -101,4 +101,16 @@ public class LeagueTest {
 
         assertEquals(arsenal, table.get(0).getTeam());
     }
+
+    @Test
+    void badResultKeepsTheFixtureInTheQueue() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        league.addFixture(match);
+        assertThrows(IllegalArgumentException.class, () -> league.playNextFixture(-2, 3));
+        league.playNextFixture(2, 3);
+        assertEquals(1, league.getMatches().size());
+        assertTrue(match.isPlayed());
+    }
 }

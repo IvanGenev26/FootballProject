@@ -6,6 +6,7 @@ public class League {
     private final String name;
     private final Map<Integer, Team> teams = new HashMap<>();
     private final List<Match> matches = new ArrayList<>();
+    private final Queue<Match> fixtures = new LinkedList<>();
 
     public League(String name) {
         if (name == null || name.isBlank()) {
@@ -71,4 +72,26 @@ public class League {
         return result;
     }
 
+    public void addFixture(Match match) {
+        if (match == null) {
+            throw new IllegalArgumentException("Match cannot be null");
+        }
+        if (!teams.containsKey(match.getHomeTeam().getId())) {
+            throw new IllegalStateException("Home team is not in the league: " + match.getHomeTeam().getName());
+        }
+        if (!teams.containsKey(match.getAwayTeam().getId())) {
+            throw new IllegalStateException("Away team is not in the league: " + match.getAwayTeam().getName());
+        }
+        fixtures.add(match);
+    }
+
+    public void playNextFixture(int homeGoals, int awayGoals) {
+        Match next = fixtures.peek();
+        if (next == null) {
+            throw new IllegalStateException("There are no fixtures to play");
+        }
+        next.recordResult(homeGoals, awayGoals);
+        addMatch(next);
+        fixtures.poll();
+    }
 }
