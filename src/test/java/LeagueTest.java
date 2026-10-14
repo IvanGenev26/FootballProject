@@ -113,4 +113,33 @@ public class LeagueTest {
         assertEquals(1, league.getMatches().size());
         assertTrue(match.isPlayed());
     }
+
+    @Test
+    void playingWithNoFixturesThrows() {
+        assertThrows(IllegalStateException.class, () -> league.playNextFixture(2, 3));
+    }
+
+    @Test
+    void addFixtureRejectsAnAlreadyPlayedMatch() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        match.recordResult(1, 0);
+
+        assertThrows(IllegalStateException.class, () -> league.addFixture(match));
+    }
+
+    @Test
+    void sameTwoTeamsCanMeetTwice() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+
+        league.addFixture(new Match(arsenal, chelsea));
+        league.addFixture(new Match(chelsea, arsenal));
+
+        league.playNextFixture(1, 0);
+        league.playNextFixture(2, 2);
+
+        assertEquals(2, league.getMatches().size());
+    }
 }

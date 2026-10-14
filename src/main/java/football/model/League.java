@@ -82,6 +82,9 @@ public class League {
         if (!teams.containsKey(match.getAwayTeam().getId())) {
             throw new IllegalStateException("Away team is not in the league: " + match.getAwayTeam().getName());
         }
+        if (match.isPlayed()) {
+            throw new IllegalStateException(match.getHomeTeam().getName() + "vs" + match.getAwayTeam().getName() + " has already been recorded");
+        }
         fixtures.add(match);
     }
 
