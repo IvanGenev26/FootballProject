@@ -198,4 +198,23 @@ public class LeagueTest {
         assertThrows(IllegalStateException.class,
                 () -> league.recordResult(new ParsedResult("Arsenal", 3, 0, "Chelsea")));
     }
+
+    @Test
+    void teamsOnEqualPointsAreOrderedByGoalDifference() {
+        Team everton = new Team("Everton");
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        league.addTeam(everton);
+
+        Match first = new Match(chelsea, everton);
+        Match second = new Match(arsenal, everton);
+        league.addMatch(first);
+        league.addMatch(second);
+        first.recordResult(5, 0);
+        second.recordResult(1, 0);
+
+        List<TableRow> table = league.table(new ThreePointRule());
+
+        assertEquals(arsenal, table.get(0).getTeam());
+    }
 }

@@ -92,7 +92,13 @@ public class League {
             }
         }
         List<TableRow> result = new ArrayList<>(rows.values());
-        result.sort((a, b) -> Integer.compare(b.getPoints(), a.getPoints()));
+        result.sort((a, b) -> {
+            int byPoints = Integer.compare(b.getPoints(), a.getPoints());
+            if (byPoints != 0) {
+                return byPoints;
+            }
+            return Integer.compare(b.getGoalDifference(), a.getGoalDifference());
+        });
         return result;
     }
 
