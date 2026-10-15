@@ -13,4 +13,17 @@ public class ResultParser {
         Matcher matcher = RESULT.matcher(line);
         return matcher.matches();
     }
+
+    public ParsedResult parse(String line) {
+        if (!isValid(line)) {
+            throw new IllegalArgumentException("Invalid result line: " + line);
+        }
+        Matcher matcher = RESULT.matcher(line);
+        matcher.matches();
+        String homeTeam = matcher.group(1);
+        int homeGoals = Integer.parseInt(matcher.group(2));
+        int awayGoals = Integer.parseInt(matcher.group(3));
+        String awayTeam = matcher.group(4);
+        return new ParsedResult(homeTeam, homeGoals, awayGoals, awayTeam);
+    }
 }
