@@ -142,4 +142,25 @@ public class LeagueTest {
 
         assertEquals(2, league.getMatches().size());
     }
+
+    @Test
+    void findTeamByNameReturnsTheTeam() {
+        league.addTeam(arsenal);
+
+        assertEquals(arsenal, league.findTeamByName("Arsenal"));
+    }
+
+    @Test
+    void findTeamByNameIgnoresCapitalLetters() {
+        league.addTeam(arsenal);
+
+        assertEquals(arsenal, league.findTeamByName("arsenal"));
+    }
+
+    @Test
+    void findTeamByNameRejectsAnUnknownName() {
+        league.addTeam(arsenal);
+
+        assertThrows(IllegalArgumentException.class, () -> league.findTeamByName("Nobody"));
+    }
 }

@@ -50,6 +50,15 @@ public class League {
         return name;
     }
 
+    public Team findTeamByName(String name) {
+        for (Team team : teams.values()) {
+            if (team.getName().equalsIgnoreCase(name)) {
+                return team;
+            }
+        }
+        throw new IllegalArgumentException("No team named " + name);
+    }
+
     public List<TableRow> table(PointsRule rule) {
         Map<Integer, TableRow> rows = new HashMap<>();
         for (Team team : teams.values()) {
