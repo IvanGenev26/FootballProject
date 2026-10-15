@@ -59,6 +59,21 @@ public class League {
         throw new IllegalArgumentException("No team named " + name);
     }
 
+    public void recordResult(ParsedResult result) {
+        Team home = findTeamByName(result.homeTeam());
+        Team away = findTeamByName(result.awayTeam());
+
+        for (Match match : fixtures) {
+            if (match.getHomeTeam().equals(home) && match.getAwayTeam().equals(away)) {
+                match.recordResult(result.homeGoals(), result.awayGoals());
+                addMatch(match);
+                fixtures.remove(match);
+                return;
+            }
+        }
+        throw new IllegalStateException("No fixture: " + result.homeTeam() + " vs " + result.awayTeam());
+    }
+
     public List<TableRow> table(PointsRule rule) {
         Map<Integer, TableRow> rows = new HashMap<>();
         for (Team team : teams.values()) {

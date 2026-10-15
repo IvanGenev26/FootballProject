@@ -163,4 +163,39 @@ public class LeagueTest {
 
         assertThrows(IllegalArgumentException.class, () -> league.findTeamByName("Nobody"));
     }
+
+    @Test
+    void recordResultPlaysTheMatchingFixture() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        league.addFixture(match);
+
+        league.recordResult(new ParsedResult("Arsenal", 2, 1, "Chelsea"));
+
+        assertTrue(match.isPlayed());
+        assertEquals(2, match.getHomeGoals());
+        assertEquals(1, match.getAwayGoals());
+        assertEquals(1, league.getMatches().size());
+    }
+
+    @Test
+    void recordResultRejectsAResultWithNoFixture() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+
+        assertThrows(IllegalStateException.class,
+                () -> league.recordResult(new ParsedResult("Arsenal", 2, 1, "Chelsea")));
+    }
+
+    @Test
+    void aFixtureCanBeRecordedOnlyOnce() {
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        league.addFixture(new Match(arsenal, chelsea));
+        league.recordResult(new ParsedResult("Arsenal", 2, 1, "Chelsea"));
+
+        assertThrows(IllegalStateException.class,
+                () -> league.recordResult(new ParsedResult("Arsenal", 3, 0, "Chelsea")));
+    }
 }
