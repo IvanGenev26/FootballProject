@@ -1,5 +1,7 @@
 package football.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Match {
@@ -34,6 +36,22 @@ public class Match {
     }
     public Team getAwayTeam() {
         return awayTeam;
+    }
+
+    private final List<Goal> goals = new ArrayList<>();
+
+    public void addGoal(Player scorer, int minute) {
+        if (scorer == null) {
+            throw new IllegalArgumentException("scorer cannot be null");
+        }
+        if (minute < 1 || minute > 130) {
+            throw new IllegalArgumentException("loose limit");
+        }
+        goals.add(new Goal(scorer, minute));
+    }
+
+    public List<Goal> getGoals() {
+        return new ArrayList<>(goals);
     }
 
     public void recordResult(int homeGoals, int awayGoals) {

@@ -1,4 +1,6 @@
+import football.model.FieldPlayer;
 import football.model.Match;
+import football.model.Position;
 import football.model.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,5 +84,29 @@ public class MatchTest {
     void rejectsSecondScoreTest() {
         match.recordResult(2, 1);
         assertThrows(IllegalStateException.class, () -> match.recordResult(1, 1));
+    }
+
+    @Test
+    void addGoalStoresTheScorerAndTheMinute() {
+        FieldPlayer saka = new FieldPlayer("Bukayo Saka", "England", 7, Position.FORWARD, 26);
+
+        match.addGoal(saka, 34);
+
+        assertEquals(1, match.getGoals().size());
+        assertEquals(saka, match.getGoals().get(0).scorer());
+        assertEquals(34, match.getGoals().get(0).minute());
+    }
+
+    @Test
+    void addGoalRejectsANullScorer() {
+        assertThrows(IllegalArgumentException.class, () -> match.addGoal(null, 34));
+    }
+
+    @Test
+    void addGoalRejectsAnInvalidMinute() {
+        FieldPlayer saka = new FieldPlayer("Bukayo Saka", "England", 7, Position.FORWARD, 26);
+
+        assertThrows(IllegalArgumentException.class, () -> match.addGoal(saka, 0));
+        assertThrows(IllegalArgumentException.class, () -> match.addGoal(saka, 131));
     }
 }

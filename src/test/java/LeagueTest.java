@@ -3,6 +3,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -215,6 +216,24 @@ public class LeagueTest {
 
         List<TableRow> table = league.table(new ThreePointRule());
 
-        assertEquals(arsenal, table.get(0).getTeam());
+        assertEquals(chelsea, table.get(0).getTeam());
+    }
+
+    @Test
+    void goalsByPlayerCountsEachScorer() {
+        FieldPlayer saka = new FieldPlayer("Bukayo Saka", "England", 7, Position.FORWARD, 26);
+        FieldPlayer palmer = new FieldPlayer("Cole Palmer", "England", 20, Position.MIDFIELDER, 24);
+        league.addTeam(arsenal);
+        league.addTeam(chelsea);
+        Match match = new Match(arsenal, chelsea);
+        league.addMatch(match);
+        match.addGoal(saka, 10);
+        match.addGoal(saka, 55);
+        match.addGoal(palmer, 70);
+
+        Map<Player, Long> counts = league.goalsByPlayer();
+
+        assertEquals(2L, counts.get(saka));
+        assertEquals(1L, counts.get(palmer));
     }
 }

@@ -1,6 +1,8 @@
 package football.model;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class League {
     private final String name;
@@ -113,7 +115,7 @@ public class League {
             throw new IllegalStateException("Away team is not in the league: " + match.getAwayTeam().getName());
         }
         if (match.isPlayed()) {
-            throw new IllegalStateException(match.getHomeTeam().getName() + "vs" + match.getAwayTeam().getName() + " has already been recorded");
+            throw new IllegalStateException(match.getHomeTeam().getName() + " vs " + match.getAwayTeam().getName() + " has already been recorded");
         }
         fixtures.add(match);
     }
@@ -126,5 +128,12 @@ public class League {
         next.recordResult(homeGoals, awayGoals);
         addMatch(next);
         fixtures.poll();
+    }
+
+    public Map<Player, Long> goalsByPlayer() {
+        return matches.stream()
+                .flatMap(match -> match.getGoals().stream())
+                .map(Goal::scorer)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 }
